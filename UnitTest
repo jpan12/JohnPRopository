@@ -1,1 +1,51 @@
-fffff
+//1 interface
+public interface IJDataProvider
+{
+    string GetJSonDataType();
+    String GetJSonNewData()
+}
+//2 implemen
+
+public class JsonDataAccess: IJDataProvider 
+{
+    public string Type { get; set; }   
+    public string newValue { get; set; }
+    public int Id { get; set; }
+    public string Result { get; set; }  
+    
+    public JsonDataAccess(string _Type, int? _id, string? _newvalue) {
+ 	        Type= _Type;
+	        Id = _id, 
+	        newValue = _newvalue
+    }
+
+    public string GetJSonDataType() {
+        return Type;        
+    }
+    Public String GetJSonNewData(){
+	    return newValue
+	  }
+
+	  Public String GetJSonId(){
+	    return Id
+	  }
+}
+
+
+//3 test
+[TestMethod]
+void JSONObjectDataTest()
+{
+  string _type="customers";
+  string _nVale = "\"mylastName\"";
+  int _id=null;
+    // Arrange
+    var controller = new jjController(new JsonDataAccess(_type, _id, _nVale));
+
+    // Act
+    controller.Put()
+    controller.Get();
+
+    // Assert
+    Assert.AreEqual("PAn", controller.Result);
+}
