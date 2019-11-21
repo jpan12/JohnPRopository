@@ -1,1 +1,191 @@
-trees
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GroceryStoreAPI.Controllers
+{  //properties
+    public string Type { get; set; }   
+    public string newValue { get; set; }
+    public int Id { get; set; }
+    public string Result { get; set; } 
+//variables
+string filepath = "../database.json";
+Var JData = new StreamReader(filepath).ReadToEnd()// load j data from j file
+JObject jObjs = JObject.Parse(JData);
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ValuesController : ControllerBase
+    {
+    //test only    
+    private readonly IJDataProvider _jdataProviderr; 
+    public ValuesController(IJDataProvider jdataProvider)
+    {
+      _jdataProviderr=jdataProviderr
+    }
+
+        // GET api/values search based on type such as customer, product, and order for a customer
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
+        {
+           var returnValue= string.empty;
+ 	        switch(Type)
+	        {
+	          case "customers"
+              var names = jObjs["customers"].Children()["name"];
+	            var list = new List<string>();
+	            list.AddRange(names.Select(name => names.Value<string>()));
+	            foreach (var item in list)
+	              returnValue += "\"" + item +"\","
+                //finale format should be "pan","jonh"
+	            break;
+	          case "products"
+	            var products = jObjs["products"].Children();
+              foreach (var item in products {
+              returnValue += "\"" + item[desription] +" " +item[price] + "\","  
+            //finale format should be "TV 300.0","table 56.7"
+	            break;
+	       
+          default:
+	        }
+          return returnValue;
+           // return new string[] { "value1", "value2" };
+        }
+
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public ActionResult<string> Get()
+        {        
+          var returnValue= string.empty;
+ 	        switch(Type)
+	        {
+	          case "customers"
+             returnValue =GetCustomersById(Id)	 
+	            break;
+	          case "products"
+              returnValue = GetProductsById(Id)   
+	            break;
+           case "orders" //get orders for one customer
+	          var orders = jObjs["orders"].Children();
+            foreach (var item in orders {
+              var name =GetCustomersById(item["customerId"])
+		          if item["customerId"]==Id
+		          {
+            	    var items = tem["items"].Children();
+		              foreach (var itm in items {
+			            returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
+		              }           	
+	            }		
+            }
+          
+             //finale format should be   "TV 3","table 2"
+          break;
+              default:
+	          }
+          return returnValue;
+            //return "value";
+        }
+
+        // POST api/values
+        [HttpPost]
+        public void Post([FromBody] string newValue)
+        {
+          string filepath = "../database.json";
+          string result = string.Empty;
+          switch(type)
+          {
+	            case"customers"
+ 	            using (StreamReader r = new StreamReader(filepath))
+              {
+                var json = r.ReadToEnd();
+                var jobj = JObject.Parse(json);  
+		            //addnew    
+		            if id==null{
+ 			            var newId = max(jobj["customers"]["Id"])) + 1;
+			            var newCust= { Id:newId, name:newNalue}
+ 		              jobj[customers]).Add(newCust)
+		              }
+		            else //update
+		            {
+                    foreach (var item in jobj[customers]) {
+                    if(item["id"]==id)
+			                  item["name"]=newValue;                           
+                 }
+		            }
+
+                result = jobj.ToString();
+                File.WriteAllText(filepath, result);              
+            }
+	          break;
+           case "products"
+          // newvalue should be like "decrit" "","+ "3.4"
+              var descrip = "\""+ newvalue.split(",")[0] +"\""
+              var price = newvalue.split(",")[1]
+              using (StreamReader r = new StreamReader(filepath))
+              {
+                var json = r.ReadToEnd();
+                var jobj = JObject.Parse(json);  
+		            //addnew    
+		              if id==null{
+ 			                var newId = max(jobj["products"]["Id"])) + 1;
+			                var newJprod= { Id:newId, description:descrip,price:price}
+ 		                  jobj[products].Add(newprod)
+
+		                }
+		                else //update
+		                {
+                      foreach (var item in jobj[products]) {
+                      if(item["id"]==id)
+                      {
+			                    item["description"]=descrip;
+                         item["price"]=price;
+                       }             
+                	  }
+		            }
+
+                result = jobj.ToString();
+                File.WriteAllText(filepath, result);              
+	              break;
+            }      
+
+ 
+        }
+
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+        
+        //pan  /help functions
+        private string GetProductsById(int id)
+        {
+	        string returnValue=string.empty;
+	        var products = jObjs["products"].Children();
+	        foreach (var item in products {
+             if item["Id"]==id 
+             //returnValue = "\"" + item["desription"] +" " +item["price"] + "\","  
+ 		        returnValue = "\"" + item["desription"]  + "\","  
+            }
+	        return returnValue
+        }
+        private string GetCustomersById(int id)
+        {
+	        string returnValue=string.empty;
+	        var names = jObjs["customers"].Children();
+	        foreach (var item in names {
+             if item["Id"]==id 
+             returnValue = "\"" + item["name"] + "\","  
+	        }
+	        return returnValue
+        }
+    }
+}
