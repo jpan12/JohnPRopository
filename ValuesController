@@ -88,10 +88,11 @@ JObject jObjs = JObject.Parse(JData);
             //return "value";
         }
 
-        // POST api/values
+        // POST api/values  var JData = { Id:1, Name:"James" }
         [HttpPost]
-        public void Post([FromBody] string newValue)
+        public string Post([FromBody] JData newValue)
         {
+	try{
           string filepath = "../database.json";
           string result = string.Empty;
           switch(type)
@@ -148,9 +149,13 @@ JObject jObjs = JObject.Parse(JData);
                 result = jobj.ToString();
                 File.WriteAllText(filepath, result);              
 	              break;
+		      default:
             }      
-
- 
+return "success"
+ }//try
+catch (Exception ex)
+ {
+ }
         }
 
         // PUT api/values/5
