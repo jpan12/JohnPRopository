@@ -34,7 +34,7 @@ JObject jObjs = JObject.Parse(JData);
  	        switch(Type)
 	        {
 	          case "customers"
-              var names = jObjs["customers"].Children()["name"];
+		      var names = jObjs["customers"].Children()["name"];
 	            var list = new List<string>();
 	            list.AddRange(names.Select(name => names.Value<string>()));
 	            foreach (var item in list)
@@ -62,15 +62,15 @@ JObject jObjs = JObject.Parse(JData);
  	        switch(Type)
 	        {
 	          case "customers"
-             returnValue =GetCustomersById(Id)	 
+             		returnValue =GetCustomersById(Id)	 
 	            break;
 	          case "products"
-              returnValue = GetProductsById(Id)   
+             		 returnValue = GetProductsById(Id)   
 	            break;
-           case "orders" //get orders for one customer
+          	 case "orders" //get orders for one customer
 	          var orders = jObjs["orders"].Children();
-            foreach (var item in orders {
-              var name =GetCustomersById(item["customerId"])
+           	 foreach (var item in orders {
+             		 var name =GetCustomersById(item["customerId"])
 		          if item["customerId"]==Id
 		          {
             	    var items = tem["items"].Children();
@@ -189,11 +189,54 @@ JObject jObjs = JObject.Parse(JData);
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public string Delete(int id)
         {
+	try{
+	 string filepath = "../database.json";
+	  using (StreamReader r = new StreamReader(filepath))
+          {
+                var json = r.ReadToEnd();
+                var jobj = JObject.Parse(json);
+		var indx  = 0
+          	switch(type)
+          	{
+		      case"customers"     
+			 foreach (var item in jobj[customers]) {
+                  	 if(item["id"] == id)
+                         {
+			 (jobj.customers as JArray).RemoveAt(indx);
+			 break;
+			 }
+		         indx +=1
+			
+                        } //for  
+			break;
+			 case"products"     
+			 foreach (var item in jobj[products]) {
+                  	 if(item["id"] == id)
+                         {
+			 (jobj.products as JArray).RemoveAt(indx);
+			 break;
+			 }
+		         indx +=1
+			
+                        } //for  
+			break;
+			default:
+                   }
+ 			 	
+		result = jobj.ToString();
+                File.WriteAllText(filepath, result);                   
+	      
+		]//u
+		retturn "success";
+               }
+	      catch (Exception ex)
+ 		{
+ 		}
         }
         
-        //pan  /help functions
+        //pan  /help functions********************************
         private string GetProductsById(int id)
         {
 	        string returnValue=string.empty;
