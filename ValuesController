@@ -144,7 +144,7 @@ JObject jObjs = JObject.Parse(JData);
        }
 
         // PUT api/values/5 var JData = {Type:"customers", Id:1, name:"James" } for customer
-	// JData = { Id:1, description:"good", price:23 } for product
+	// JData = { Id:1,Type:"customers", description:"good", price:23 } for product
         [HttpPut("{id}")]
         public string Put(int id, [FromBody] JData value)
         {
