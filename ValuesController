@@ -11,16 +11,16 @@ namespace GroceryStoreAPI.Controllers
     public class ValuesController : ControllerBase
     {
     //test only    
-    private readonly IJDataProvider _jdataProviderr; 
-    public ValuesController(IJDataProvider jdataProvider)
-    {
-      _jdataProviderr=jdataProviderr
-    }
+   // private readonly IJDataProvider _jdataProviderr; 
+   // public ValuesController(IJDataProvider jdataProvider)
+    //{
+    //  _jdataProviderr=jdataProviderr
+   //}
 //properties
-    public string Type { get; set; }   
-    public string newValue { get; set; }
-    public int Id { get; set; }
-    public string Result { get; set; } 
+   // public string Type { get; set; }   
+   // public string newValue { get; set; }
+  //  public int Id { get; set; }
+   // public string Result { get; set; } 
 //test above only
 
 
