@@ -50,6 +50,11 @@ namespace Prime.UnitTests.Services
 	  string _type="customers";
   	  string _nVale = "\"mylastName\"";
 	  int _id=1;
+	  string _date="2019-11-23"
+	  int _customerid=1
+	
+	   // [HttpGet("{id}/{Type}/{customerId}/{date}")]
+       // public ActionResult<string> Get(int id, string Type, int customerid, string date)
     	// Arrange
     	var controller = new ValuesController();//new JsonDataAccess(_type, _id, _nVale));
 
