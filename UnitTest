@@ -32,6 +32,8 @@ public class JsonDataAccess: IJDataProvider
 }
 
 
+
+
 //test
 using NUnit.Framework;
 using GroceryStoreAPI.Controllers;
@@ -53,33 +55,48 @@ namespace Prime.UnitTests.Services
 	  string _date="2019-11-23"
 	  int _customerid=1
 	
-	   // [HttpGet("{id}/{Type}/{customerId}/{date}")]
-       // public ActionResult<string> Get(int id, string Type, int customerid, string date)
     	// Arrange
     	var controller = new ValuesController();//new JsonDataAccess(_type, _id, _nVale));
 
     	// Act
+	//CASE 1
+	//API saving a customer
+	//API saving a product
 	_nVale = { id:1, Type:"customers", name:"john"};
     	var result= controller.Put(_nVale)
 		Assert.AreEqual("success", controller.Result);
 		
-		
+	//CASE 2
+	//API saving a customer
+	//.API saving a product
 	_nVale = { Type:"customers", name:"john"};
 	var result= controller.Post(_nVale)
 	Assert.AreEqual("success", controller.Result);
-		
+	
+	
+	//CASE3	
 	_id=1;
          _type="customers";
 	var result= controller.Delete(_id,_type)
 	Assert.AreEqual("success", controller.Result);
 	
+	//CASE 4
       // if your action was returning data in the body like: Ok<string>("data: 12")
+      //API listing all customers
+      //API listing all orders
+     //API listing allproducts
          _id=1;
 	_type="customers";
     	var actionResult = controller.Get(_type);
    	 OkNegotiatedContentResult<string> conNegResult = Assert.IsType<OkNegotiatedContentResult<string>>(actionResult);
    	Assert.Equal({name:"pan"}, conNegResult.Content)
-    	
+    	//CASE5
+	//API listing all orders for a given date - USE date, id, type
+	//API retrieving an order - use type,id
+	//API retrieving a customer - use id, type
+	//API retrieving a product  - use id, type
+	//API list a customer's orders  - use id, type, customeid
+	//Get(int id, string Type, int customerid, string date) input parameters in this order for testing
        _id=1;
 	_type="customers";
     	var actionResult = controller.Get(_id, _type);
