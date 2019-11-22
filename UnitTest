@@ -54,24 +54,32 @@ namespace Prime.UnitTests.Services
     	var controller = new ValuesController();//new JsonDataAccess(_type, _id, _nVale));
 
     	// Act
-    	var result= controller.Put(_id,_type)
+	_nVale = { id:1, Type:"customers", name:"john"};
+    	var result= controller.Put(_nVale)
 		Assert.AreEqual("success", controller.Result);
 		
-	var result= controller.POST(_id,_type)
+		
+	_nVale = { Type:"customers", name:"john"};
+	var result= controller.Post(_nVale)
 	Assert.AreEqual("success", controller.Result);
 		
+	_id=1;
+         _type="customers";
 	var result= controller.Delete(_id,_type)
 	Assert.AreEqual("success", controller.Result);
 	
       // if your action was returning data in the body like: Ok<string>("data: 12")
-    	var actionResult = controller.Get();
+         _id=1;
+	_type="customers";
+    	var actionResult = controller.Get(_type);
    	 OkNegotiatedContentResult<string> conNegResult = Assert.IsType<OkNegotiatedContentResult<string>>(actionResult);
    	Assert.Equal({name:"pan"}, conNegResult.Content)
-    	// Assert
-    	Assert.AreEqual("PAn", controller.Result);
-
-   
-;
+    	
+       _id=1;
+	_type="customers";
+    	var actionResult = controller.Get(_id, _type);
+   	 OkNegotiatedContentResult<string> conNegResult = Assert.IsType<OkNegotiatedContentResult<string>>(actionResult);
+   	Assert.Equal({name:"pan"}, conNegResult.Content)
 	}
     }
 }
