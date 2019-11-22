@@ -32,6 +32,27 @@ public class JsonDataAccess: IJDataProvider
 }
 
 
+//test
+using NUnit.Framework;
+using Prime.Services;
+
+namespace Prime.UnitTests.Services
+{
+    [TestFixture]
+    public class JData_Test
+    {
+        [Test]
+        public void IsPrime_InputIs1_ReturnFalse()
+        {
+            PrimeService primeService = CreatePrimeService();
+            var result = primeService.IsPrime(1);
+
+            Assert.IsFalse(result, "1 should not be prime");
+        }
+        
+        
+ 
+
 //3 test
 [TestMethod]
 void JSONObjectDataTest()
@@ -48,4 +69,6 @@ void JSONObjectDataTest()
 
     // Assert
     Assert.AreEqual("PAn", controller.Result);
+}
+}
 }
