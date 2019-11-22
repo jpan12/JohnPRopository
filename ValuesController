@@ -56,7 +56,7 @@ JObject jObjs = JObject.Parse(JData);
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get()
+        public ActionResult<string> Get(int id)
         {        
           var returnValue= string.empty;
  	        switch(Type)
@@ -90,79 +90,102 @@ JObject jObjs = JObject.Parse(JData);
 
         // POST api/values  var JData = { Id:1, Name:"James" }
         [HttpPost]
-        public string Post([FromBody] JData newValue)
+        public string Post([FromBody] JData value)
         {
 	try{
           string filepath = "../database.json";
-          string result = string.Empty;
           switch(type)
           {
-	            case"customers"
- 	            using (StreamReader r = new StreamReader(filepath))
+	      case"customers"
+ 	       using (StreamReader r = new StreamReader(filepath))
               {
                 var json = r.ReadToEnd();
                 var jobj = JObject.Parse(json);  
-		            //addnew    
-		            if id==null{
- 			            var newId = max(jobj["customers"]["Id"])) + 1;
-			            var newCust= { Id:newId, name:newNalue}
- 		              jobj[customers]).Add(newCust)
-		              }
-		            else //update
-		            {
-                    foreach (var item in jobj[customers]) {
-                    if(item["id"]==id)
-			                  item["name"]=newValue;                           
-                 }
-		            }
+		         
+ 		var newId = max(jobj["customers"]["Id"])) + 1;
+		var newCust= { Id:newId, name:value["name"]}
+ 		 jobj[customers]).Add(newCust)		
+		}
 
                 result = jobj.ToString();
                 File.WriteAllText(filepath, result);              
-            }
-	          break;
+            
+	       break;
            case "products"
-          // newvalue should be like "decrit" "","+ "3.4"
-              var descrip = "\""+ newvalue.split(",")[0] +"\""
-              var price = newvalue.split(",")[1]
               using (StreamReader r = new StreamReader(filepath))
               {
                 var json = r.ReadToEnd();
                 var jobj = JObject.Parse(json);  
-		            //addnew    
-		              if id==null{
- 			                var newId = max(jobj["products"]["Id"])) + 1;
-			                var newJprod= { Id:newId, description:descrip,price:price}
- 		                  jobj[products].Add(newprod)
-
-		                }
-		                else //update
-		                {
-                      foreach (var item in jobj[products]) {
-                      if(item["id"]==id)
-                      {
-			                    item["description"]=descrip;
-                         item["price"]=price;
-                       }             
-                	  }
-		            }
+		
+ 		var newId = max(jobj["products"]["Id"])) + 1;
+		var newJprod= { Id:newId, description:value["description"],price:value["price"]}
+ 		 jobj[products].Add(newprod)
+		 }
 
                 result = jobj.ToString();
                 File.WriteAllText(filepath, result);              
-	              break;
-		      default:
-            }      
-return "success"
- }//try
-catch (Exception ex)
- {
- }
-        }
+	      break;
+	     default:
+            }  //switch    
+	return "success"
+ 	}//try
+	catch (Exception ex)
+ 	{
+ 	}
+       }
 
-        // PUT api/values/5
+        // PUT api/values/5 var JData = { Id:1, name:"James" } for customer
+	// JData = { Id:1, description:"good", price:23 } for product
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public string Put(int id, [FromBody] JData value)
         {
-        }
+	try{
+          string filepath = "../database.json";
+         
+          switch(type)
+          {
+	      case"customers"
+ 	       using (StreamReader r = new StreamReader(filepath))
+              {
+                var json = r.ReadToEnd();
+                var jobj = JObject.Parse(json);  
+                foreach (var item in jobj[customers]) {
+                if(item["id"] == value{"id"])
+		 tem["name"] = value["name"];                           
+                  }
+	      }
+
+                result = jobj.ToString();
+                File.WriteAllText(filepath, result);              
+            
+	        break;
+           	case "products"
+   
+              using (StreamReader r = new StreamReader(filepath))
+              {
+                var json = r.ReadToEnd();
+                var jobj = JObject.Parse(json);  
+		  
+                  foreach (var item in jobj[products]) {
+                  	if(item["id"] == value["id"])
+                       {
+			item["description"]=value["description"];
+                       item["price"]=value["price"];
+                      }             
+                   }
+		 }
+
+                result = jobj.ToString();
+                File.WriteAllText(filepath, result);              
+	         break;
+		default:
+            }  //switch    
+	return "success"
+ 	}//try
+	catch (Exception ex)
+ 	{
+ 	}
+        }//end
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
