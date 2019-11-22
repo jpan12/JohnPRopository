@@ -5,16 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroceryStoreAPI.Controllers
-{  //properties
-    public string Type { get; set; }   
-    public string newValue { get; set; }
-    public int Id { get; set; }
-    public string Result { get; set; } 
-//variables
-string filepath = "../database.json";
-Var JData = new StreamReader(filepath).ReadToEnd()// load j data from j file
-JObject jObjs = JObject.Parse(JData);
-
+{  
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -25,11 +16,28 @@ JObject jObjs = JObject.Parse(JData);
     {
       _jdataProviderr=jdataProviderr
     }
+//properties
+    public string Type { get; set; }   
+    public string newValue { get; set; }
+    public int Id { get; set; }
+    public string Result { get; set; } 
+//test above only
+
+
+
+
+//variables
+string filepath = "../database.json";
+Var JData = new StreamReader(filepath).ReadToEnd()// load j data from j file
+JObject jObjs = JObject.Parse(JData);
+
 
         // GET api/values search based on type such as customer, product, and order for a customer
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        [HttpGet("{Type}")]
+        public ActionResult<IEnumerable<string>> Get(string Type)
         {
+	
+          char[] charsToTrim = {',', ' '};
            var returnValue= string.empty;
  	        switch(Type)
 	        {
@@ -50,13 +58,13 @@ JObject jObjs = JObject.Parse(JData);
 	       
           default:
 	        }
-          return returnValue;
+          return (returnValue.TrimEnd(charsToTrim)
            // return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        // GET api/values/5 
+        [HttpGet("{id}/{Type}")]
+        public ActionResult<string> Get(int id, string Type)
         {        
           var returnValue= string.empty;
  	        switch(Type)
@@ -84,14 +92,15 @@ JObject jObjs = JObject.Parse(JData);
           break;
               default:
 	          }
-          return returnValue;
+          return (returnValue.TrimEnd(charsToTrim)
             //return "value";
         }
 
-        // POST api/values  var JData = { Id:1, Name:"James" }
+        // POST api/values  var JData = {Type:"customers" Id:1, Name:"James" }
         [HttpPost]
         public string Post([FromBody] JData value)
-        {
+        { 
+	string type= value["Type"];
 	try{
           string filepath = "../database.json";
           switch(type)
@@ -134,11 +143,12 @@ JObject jObjs = JObject.Parse(JData);
  	}
        }
 
-        // PUT api/values/5 var JData = { Id:1, name:"James" } for customer
+        // PUT api/values/5 var JData = {Type:"customers", Id:1, name:"James" } for customer
 	// JData = { Id:1, description:"good", price:23 } for product
         [HttpPut("{id}")]
         public string Put(int id, [FromBody] JData value)
         {
+	string type= value["Type"];
 	try{
           string filepath = "../database.json";
          
@@ -188,8 +198,8 @@ JObject jObjs = JObject.Parse(JData);
         }//end
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public string Delete(int id)
+        [HttpDelete("{id}/{Type}")]
+        public string Delete(int id, string Type)
         {
 	try{
 	 string filepath = "../database.json";
