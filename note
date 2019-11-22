@@ -1,0 +1,6 @@
+1. for listing orders for a given date, property date was added for order json in database.json
+2. I did not run these code. certainly, there are some errors or bugs. please just check my development logic
+3. for testing, just use diferent variables. some notes were made there.
+4. Paarameter Type means "customers","orders" or "products" 
+5. in order to test well, stthe retturntype was changed to string, instend of void for Pst, Put and Delete
+6. I afinished Delete, whch is not required.
