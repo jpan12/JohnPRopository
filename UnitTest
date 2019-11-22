@@ -34,41 +34,44 @@ public class JsonDataAccess: IJDataProvider
 
 //test
 using NUnit.Framework;
-using Prime.Services;
+using GroceryStoreAPI.Controllers;
 
+  
 namespace Prime.UnitTests.Services
 {
     [TestFixture]
     public class JData_Test
     {
-        [Test]
-        public void IsPrime_InputIs1_ReturnFalse()
-        {
-            PrimeService primeService = CreatePrimeService();
-            var result = primeService.IsPrime(1);
-
-            Assert.IsFalse(result, "1 should not be prime");
-        }
         
-        
- 
-
 //3 test
-[TestMethod]
-void JSONObjectDataTest()
-{
-  string _type="customers";
-  string _nVale = "\"mylastName\"";
-  int _id=null;
-    // Arrange
-    var controller = new jjController(new JsonDataAccess(_type, _id, _nVale));
+	[TestMethod]
+	void JSONObjectDataTest()
+	{
+	  string _type="customers";
+  	  string _nVale = "\"mylastName\"";
+	  int _id=1;
+    	// Arrange
+    	var controller = new ValuesController();//new JsonDataAccess(_type, _id, _nVale));
 
-    // Act
-    controller.Put()
-    controller.Get();
+    	// Act
+    	var result= controller.Put(_id,_type)
+		Assert.AreEqual("success", controller.Result);
+		
+	var result= controller.POST(_id,_type)
+	Assert.AreEqual("success", controller.Result);
+		
+	var result= controller.Delete(_id,_type)
+	Assert.AreEqual("success", controller.Result);
+	
+      // if your action was returning data in the body like: Ok<string>("data: 12")
+    	var actionResult = controller.Get();
+   	 OkNegotiatedContentResult<string> conNegResult = Assert.IsType<OkNegotiatedContentResult<string>>(actionResult);
+   	Assert.Equal({name:"pan"}, conNegResult.Content)
+    	// Assert
+    	Assert.AreEqual("PAn", controller.Result);
 
-    // Assert
-    Assert.AreEqual("PAn", controller.Result);
-}
-}
+   
+;
+	}
+    }
 }
