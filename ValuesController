@@ -82,12 +82,12 @@ JObject jObjs = JObject.Parse(JData);
         // GET api/values/5 
 	//API retrieving a customer
 	//API retrieving a product
-	//API list a customer's orders
+
 	//API retrieving an order
-	//API listing all orders for a given date
+	
         //API retrieving an order
-        [HttpGet("{id}/{Type}/{customerId}/{date}")]
-        public ActionResult<string> Get(int id, string Type, int customerid, string date)
+        [HttpGet("{id}/{Type}")]
+        public ActionResult<string> Get(int id, string Type)
         {        
           var returnValue= string.empty;
  	        switch(Type)
@@ -99,61 +99,78 @@ JObject jObjs = JObject.Parse(JData);
              		 returnValue = GetProductsById(Id)   
 	            break;
           	 case "orders" //get orders for one customer
-		 if date = null & customerid = null ///API retrieving an order
-		 { var orders = jObjs["orders"].Children();
-           	   foreach (var item in orders {
+			 if date = null & customerid = null ///API retrieving an order
+		 	{ var orders = jObjs["orders"].Children();
+           	   		foreach (var item in orders {
 		   
-             	   var name =GetCustomersById(item["customerId"])
-		   returnValue += "\"" + name + "\"";
-		   if item["Id"]==Id
-		   {
-            	    var items = tem["items"].Children();
-		    foreach (var itm in items {
-			returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
-		      }           	
-	            }		
-                  }
+             	   			var name =GetCustomersById(item["customerId"])
+		   			returnValue += "\"" + name + "\"";
+		  			 if item["Id"]==Id
+		   			{
+            	    				var items = tem["items"].Children();
+		    				foreach (var itm in items {
+							returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
+		     				 }           	
+	           			 }		
+                  		}
 		 
-		 } elseif(customerid != null //API list a customer's orders
-		 {
-		  var orders = jObjs["orders"].Children();
-           	   foreach (var item in orders {
-             	   var name =GetCustomersById(item["customerId"])
+		 	} 
+	
+             //finale format should be   "TV 3","table 2"
+                break;
+                default:
+	      }
+          return (returnValue.TrimEnd(charsToTrim)
+            //return "value";
+        }
+
+	//API list a customer's orders	
+	//API listing all orders for a given date
+	[HttpGet("{id}/{Type}/{customerId}")]
+        public ActionResult<string> Get(int id, string Type, int customerid)
+        { 
+	  //API list a customer's orders
+		var orders = jObjs["orders"].Children();
+           	 foreach (var item in orders {
+             	   var name =GetCustomersById(item["customerId"]) //get name
 		   returnValue += "\"" + name + "\"";
 		   if item["customerId"]==customerId
-		   {
+		   { //get items
             	    var items = tem["items"].Children();
 		    foreach (var itm in items {
 			returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
 		      }           	
 	          }		
-                }
-		 }else if date != null //API listing all orders for a given date
-		 {
-		  var orders = jObjs["orders"].Children();
-           	   foreach (var item in orders {
-		   var oDate =GetCustomersById(item["date"])
-             	   var name =GetCustomersById(item["customerId"])
-		   returnValue += "\"" + name + "\"";
-		   if item["date"]==date
+             //finale format should be   "TV 3","table 2"
+         ]
+          return (returnValue.TrimEnd(charsToTrim)
+       }
+
+
+
+	//API listing all orders for a given date
+	[HttpGet("{id}/{Type}/{date}")]
+        public ActionResult<string> Get(int id, string Type, string date)
+        { 
+	  var orders = jObjs["orders"].Children();
+           foreach (var item in orders {
+		var oDate =GetCustomersById(item["date"])
+             	var name =GetCustomersById(item["customerId"]) //customer
+		returnValue += "\"" + name + "\"";
+		if item["date"]==date//date
 		   {
             	    var items = tem["items"].Children();
 		    foreach (var itm in items {
 			returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
 		      }           	
 	            }		
-                  }
-		 }//e
-	         
-          
+             }
+		
              //finale format should be   "TV 3","table 2"
-             break;
-              default:
-	          }
+         
           return (returnValue.TrimEnd(charsToTrim)
-            //return "value";
-        }
-
+             }//e
+//date
         // POST api/values  var JData = {Type:"customers" Id:1, Name:"James" }
 	//API saving a customer
 	//API saving a product
@@ -202,6 +219,7 @@ JObject jObjs = JObject.Parse(JData);
  	{
  	}
        }
+
 
         // PUT api/values/5 var JData = {Type:"customers", Id:1, name:"James" } for customer
 	// JData = { Id:1,Type:"customers", description:"good", price:23 } for product
