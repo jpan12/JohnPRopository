@@ -24,67 +24,57 @@ namespace GroceryStoreAPI.Controllers
 //test above only
 
 
-
-
 //variables
 string filepath = "../database.json";
 Var JData = new StreamReader(filepath).ReadToEnd()// load j data from j file
 JObject jObjs = JObject.Parse(JData);
-	s
-
-
-
-        // GET api/values search based on type such as customer, product, and order for a customer
+ char[] charsToTrim = {',', ' '};
+ 
+// GET api/values search based on type such as customer, product, and order for a customer
 //PI listing all customer
 //API listing products
 //listing all orders
         [HttpGet("{Type}")]
         public ActionResult<IEnumerable<string>> Get(string Type)
-        {
-	
-          char[] charsToTrim = {',', ' '};
+        {        
            var returnValue= string.empty;
- 	        switch(Type)
-	        {
-	          case "customers"
-		      var names = jObjs["customers"].Children()["name"];
-	            var list = new List<string>();
-	            list.AddRange(names.Select(name => names.Value<string>()));
-	            foreach (var item in list)
+ 	    switch(Type)
+	    {
+	      case "customers"//PI listing all customer
+		var names = jObjs["customers"].Children()["name"];
+	        var list = new List<string>();
+	         list.AddRange(names.Select(name => names.Value<string>()));
+	        foreach (var item in list)
 	              returnValue += "\"" + item +"\","
                 	//finale format should be "pan","jonh"
-	            break;
-	          case "products"
-	            var products = jObjs["products"].Children();
-              		foreach (var item in products {
+	        break;
+	        case "products"//API listing products
+	           var products = jObjs["products"].Children();
+              		foreach (var item in products ){
               		returnValue += "\"" + item[desription] +" " +item[price] + "\","  
 		    //finale format should be "TV 300.0","table 56.7"
 	            break;
-	       case "orders"
+	       case "orders"//listing all orders
 	         var orders = jObjs["orders"].Children();
-           	 foreach (var item in orders {
-             		 var name =GetCustomersById(item["customerId"])
-		         //GetProductsById( tem["items"]["productId"])
-			 //  tem["items"]itm["quantity"] 
-			 returnValue += "\"" +nane+ "\",";
-            	        var items = tem["items"].Children();
-		         foreach (var itm in items {
-			   returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
-		          }           	 
-	            }	 
+           	 foreach (var aOrder in orders {
+                    //var name =GetCustomersById(aOrder["customerId"])  
+			// returnValue += "\"" +nane+ "\",";
+            	     var items = aOrder["items"].Children();
+		      foreach (var itm in items ){
+			   returnValue += "\"" + GetProductsById(itm["productId"]) + " " +itm["quantity"] + "\","  
+			    //finale format should be "TV 2","table 5"
+		       }           	 
+	         }	 
 	       break;
-          default:
-	        }
+            default:
+	    }
           return (returnValue.TrimEnd(charsToTrim)
-           // return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5 
 	//API retrieving a customer
 	//API retrieving a product
-
 	//API retrieving an order
-	
         //API retrieving an order
         [HttpGet("{id}/{Type}")]
         public ActionResult<string> Get(int id, string Type)
@@ -92,30 +82,28 @@ JObject jObjs = JObject.Parse(JData);
           var returnValue= string.empty;
  	        switch(Type)
 	        {
-	          case "customers"
+	          case "customers"//API retrieving a customer
              		returnValue =GetCustomersById(Id)	 
 	            break;
-	          case "products"
+	          case "products" //API retrieving a product
              		 returnValue = GetProductsById(Id)   
 	            break;
-          	 case "orders" //get orders for one customer
-			 if date = null & customerid = null ///API retrieving an order
-		 	{ var orders = jObjs["orders"].Children();
-           	   		foreach (var item in orders {
+          	 case "orders" //API retrieving an order
+		  
+		  var orders = jObjs["orders"].Children();
+           	   foreach (var aOrder in orders) {
 		   
-             	   			var name =GetCustomersById(item["customerId"])
-		   			returnValue += "\"" + name + "\"";
-		  			 if item["Id"]==Id
-		   			{
-            	    				var items = tem["items"].Children();
-		    				foreach (var itm in items {
-							returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
-		     				 }           	
-	           			 }		
-                  		}
-		 
-		 	} 
-	
+             	   	var name =GetCustomersById(aOrder["customerId"])
+		   	returnValue += "\"" + name + "\"";
+		  	 if aOrder["Id"]==Id
+		   	{
+            	    	    var items = aOrder["items"].Children();
+		    	    foreach (var itm in items ){
+				returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
+		     	     }           	
+	           	  }		
+                   } //f e
+
              //finale format should be   "TV 3","table 2"
                 break;
                 default:
@@ -131,13 +119,13 @@ JObject jObjs = JObject.Parse(JData);
         { 
 	  //API list a customer's orders
 		var orders = jObjs["orders"].Children();
-           	 foreach (var item in orders {
+           	 foreach (var item in orders ){
              	   var name =GetCustomersById(item["customerId"]) //get name
 		   returnValue += "\"" + name + "\"";
 		   if item["customerId"]==customerId
 		   { //get items
             	    var items = tem["items"].Children();
-		    foreach (var itm in items {
+		    foreach (var itm in items){
 			returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
 		      }           	
 	          }		
@@ -153,14 +141,14 @@ JObject jObjs = JObject.Parse(JData);
         public ActionResult<string> Get(int id, string Type, string date)
         { 
 	  var orders = jObjs["orders"].Children();
-           foreach (var item in orders {
+           foreach (var item in orders) {
 		var oDate =GetCustomersById(item["date"])
              	var name =GetCustomersById(item["customerId"]) //customer
 		returnValue += "\"" + name + "\"";
 		if item["date"]==date//date
 		   {
             	    var items = tem["items"].Children();
-		    foreach (var itm in items {
+		    foreach (var itm in items) {
 			returnValue += "\"" + GetProductsById(itm["productId"]) +" " +itm["quantity"] + "\","  
 		      }           	
 	            }		
@@ -331,22 +319,22 @@ JObject jObjs = JObject.Parse(JData);
         {
 	        string returnValue=string.empty;
 	        var products = jObjs["products"].Children();
-	        foreach (var item in products {
+	        foreach (var item in products) {
              if item["Id"]==id 
              //returnValue = "\"" + item["desription"] +" " +item["price"] + "\","  
  		        returnValue = "\"" + item["desription"]  + "\","  
             }
-	        return returnValue
+	        return (returnValue.TrimEnd(charsToTrim)
         }
         private string GetCustomersById(int id)
         {
 	        string returnValue=string.empty;
 	        var names = jObjs["customers"].Children();
-	        foreach (var item in names {
+	        foreach (var item in names) {
              if item["Id"]==id 
              returnValue = "\"" + item["name"] + "\","  
-	        }
-	        return returnValue
+	}
+	        return (returnValue.TrimEnd(charsToTrim)
         }
     }
 }
